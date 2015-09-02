@@ -2,3 +2,6 @@
 .DS_Store
 *~
 *.swp
+
+# pyenv file
+.python-version
