@@ -14,6 +14,27 @@ EVENTS_BEST    = ['333bf', '333fm', '444bf', '555bf', '333mbf']
 # Events whose "average" is treated as record
 EVENTS_AVERAGE = ['333', '444', '555', '222', '333oh', '333ft', 'minx', 'pyram',
                   'sq1', 'clock', 'skewb', '666', '777']
+# Full events name
+EVENTS_NAME = {
+    '333'   : "Rubik's Cube",
+    '444'   : "4x4 Cube",
+    '555'   : "5x5 Cube",
+    '222'   : "2x2 Cube",
+    '333bf' : "Rubik's Cube: Blindfolded",
+    '333oh' : "Rubik's Cube: One-handed",
+    '333fm' : "Rubik's Cube: Fewest moves",
+    '333ft' : "Rubik's Cube: With feet",
+    'minx'  : "Megaminx",
+    'pyram' : "Pyraminx",
+    'sq1'   : "Square-1",
+    'clock' : "Rubik's Clock",
+    'skewb' : "Skewb",
+    '666'   : "6x6 Cube",
+    '777'   : "7x7 Cube",
+    '444bf' : "4x4 Cube: Blindfolded",
+    '555bf' : "5x5 Cube: Blindfolded",
+    '333mbf': "Rubik's Cube: Multiple Blindfolded"
+}
 
 
 def read_competitors():
@@ -112,7 +133,8 @@ if __name__ == '__main__':
     # Generate html
     env = Environment(loader=FileSystemLoader('./', encoding='utf8'))
     tpl = env.get_template(PSYCH_TEMPLATE)
-    html = tpl.render({'events': events, 'psych': psych})
+    html = tpl.render({'competition_name': 'CompetitionName', 'events_name': EVENTS_NAME,
+                       'events': events, 'psych': psych})
     with open(PSYCH_HTML, 'w') as f:
         f.write(html.encode('utf-8'))
     print 'Complete writing to %s' % (PSYCH_HTML)
