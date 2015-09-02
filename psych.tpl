@@ -12,6 +12,10 @@
 
     <h1>{{ competition_name }} &mdash; Psych sheets</h1>
 
+    <p>
+      All data are base on <a href="https://www.worldcubeassociation.org/results/misc/export.html" target="_blank">WCA database</a> (version XXXX).
+    </p>
+
     <ul class="nav nav-tabs">
       {% for event in events -%}
         <li id="nav-{{ event }}" class="nav-event"><a href="#{{ event }}">{{ event }}</a></li>
