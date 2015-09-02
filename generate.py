@@ -12,7 +12,8 @@ PSYCH_HTML           = 'psych.html'
 # Events whose "best (single)" is treated as record
 EVENTS_BEST    = ['333bf', '333fm', '444bf', '555bf', '333mbf']
 # Events whose "average" is treated as record
-EVENTS_AVERAGE = ['333', '444', '555', '222', '333oh', '333ft', 'minx', 'pyram', 'sq1', 'clock', 'skewb', '666', '777']
+EVENTS_AVERAGE = ['333', '444', '555', '222', '333oh', '333ft', 'minx', 'pyram',
+                  'sq1', 'clock', 'skewb', '666', '777']
 
 
 def read_competitors():
@@ -56,8 +57,9 @@ def read_wcaresults(competitors, events):
                 if 0 < record:
                     # Store the record
                     if (person_id not in raw[event_id]) or (record < raw[event_id][person_id]['value']):
-                        raw[event_id][person_id] = {'value': record, 'formatted': format_record(record, event_id), 'id': person_id, 'name': person_name.decode('utf-8')}
-                        #raw[event_id][person_id] = {'value': record, 'formatted': format_record(record, event_id), 'id': person_id, 'name': 'aaa'}
+                        raw[event_id][person_id] = {'value': record,
+                                                    'formatted': format_record(record, event_id),
+                                                    'id': person_id, 'name': person_name.decode('utf-8')}
 
     # Sort by record
     psych = {}
@@ -113,5 +115,4 @@ if __name__ == '__main__':
     html = tpl.render({'events': events, 'psych': psych})
     with open(PSYCH_HTML, 'w') as f:
         f.write(html.encode('utf-8'))
-        #f.write(html)
     print 'Complete writing to %s' % (PSYCH_HTML)
