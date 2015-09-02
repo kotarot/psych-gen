@@ -5,3 +5,6 @@
 
 # pyenv file
 .python-version
+
+# WCA data
+WCA_export_Results.tsv
