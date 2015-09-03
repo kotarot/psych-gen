@@ -13,7 +13,8 @@
     <h1>{{ compinfo.name }} &mdash; Psych sheets</h1>
 
     <p>
-      All data are base on <a href="https://www.worldcubeassociation.org/results/misc/export.html" target="_blank">WCA database</a> (version {{ attrs.database_version }}).
+      All data are base on <a href="https://www.worldcubeassociation.org/results/misc/export.html" target="_blank">WCA database</a> (version {{ attrs.database_version }}).<br>
+      {{ compinfo.description }}
     </p>
 
     <ul class="nav nav-tabs">
