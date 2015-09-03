@@ -3,7 +3,8 @@
 *~
 *.swp
 
-# pyenv file
+# Python (and pyenv) file
+*.pyc
 .python-version
 
 # WCA data
