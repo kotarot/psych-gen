@@ -22,24 +22,6 @@ SCRIPT_DIR     = os.path.abspath(os.path.dirname(__file__))
 WCA_EXPORT_DIR = '/WCA_export'
 
 
-#def read_competitors():
-#    """ Reads competitors list from file. """
-#    ret = []
-#    with open(COMPETITORS_FILENAME, 'r') as f:
-#        for line in f:
-#            ret.append(line.replace('\r', '').replace('\n', ''))
-#    return ret
-
-
-#def read_events():
-#    """ Reads events list from file. """
-#    ret = []
-#    with open(EVENTS_FILENAME, 'r') as f:
-#        for line in f:
-#            ret.append(line.replace('\r', '').replace('\n', ''))
-#    return ret
-
-
 def read_compinfo(comp):
     """ Reads competition info (name and description) from .txt """
     config = ConfigParser.SafeConfigParser()
@@ -138,11 +120,6 @@ if __name__ == '__main__':
     compdata = read_compdata(args.competition)
     print 'compinfo:', compinfo
     print 'compdata:', compdata
-
-    #competitors = read_competitors()
-    #events = read_events()
-    #print 'competitors:', competitors
-    #print 'events:', events
 
     # Read WCA results and store them
     latest_export = find_latest_export()
