@@ -22,10 +22,10 @@ and put it in _WCA_export/_ directory. Note: This step will be automated in a fu
 ([sample file](sample/tohoku-2015.txt) is in _sample/_ directory).
 1. Fill _your-competition.csv_ with the entry list
 ([sample file](sample/tohoku-2015.csv) is in _sample/_ directory).
-1. Run `generate.py --output path-to-psych.html your-competition`,
+1. Run `python generate.py --output path-to-psych.html your-competition`,
 and you will soon get psych sheets in your _path-to-psych.html_
 
-For example, run `generate.py --output tohoku-2015.html tohoku-2015`,
+For example, run `python generate.py --output tohoku-2015.html tohoku-2015`,
 and you will get psych sheets for [Tohoku Open 2015](https://worldcubeassociation.org/results/c.php?i=TohokuOpen2015)
 (_sample/tohoku-2015.txt_ and _sample/tohoku-2015.csv_ are sample data for that competition).
 
