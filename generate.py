@@ -12,32 +12,12 @@ import os
 import zipfile
 
 
-#COMPETITORS_FILENAME = 'competitors.txt'
-#EVENTS_FILENAME      = 'events.txt'
+SCRIPT_DIR           = os.path.abspath(os.path.dirname(__file__))
+WCA_EXPORT_DIR       = '/WCA_export'
 WCARESULTS_FILENAME  = 'WCA_export_Results.tsv'
 PSYCH_TEMPLATE       = 'psych.tpl'
-PSYCH_HTML           = 'psych.html'
 
-SCRIPT_DIR     = os.path.abspath(os.path.dirname(__file__))
-WCA_EXPORT_DIR = '/WCA_export'
-
-
-#def read_competitors():
-#    """ Reads competitors list from file. """
-#    ret = []
-#    with open(COMPETITORS_FILENAME, 'r') as f:
-#        for line in f:
-#            ret.append(line.replace('\r', '').replace('\n', ''))
-#    return ret
-
-
-#def read_events():
-#    """ Reads events list from file. """
-#    ret = []
-#    with open(EVENTS_FILENAME, 'r') as f:
-#        for line in f:
-#            ret.append(line.replace('\r', '').replace('\n', ''))
-#    return ret
+VALUE_DNF = 9999999999
 
 
 def read_compinfo(comp):
@@ -50,31 +30,39 @@ def read_compinfo(comp):
 
 def read_compdata(comp):
     """ Reads competition data from .csv """
-    csvdata, events, competitors, entries = [], [], [], {}
+    csvdata, events, competitors, competitorsname, entries = [], [], [], {}, {}
 
     # Store CSV into dict
     with open(comp + '.csv', 'r') as f:
         reader = csv.reader(f)
         for row in reader:
-            csvdata.append([item.replace(' ', '') for item in row])
+            csvdata.append([item.decode('utf-8').strip() for item in row])
+
+    # Assing ID for new competitors
+    n = 1
+    for i, row in enumerate(csvdata):
+        if row[0] == '0':
+            csvdata[i][0] = 'N_%03d' % (n)
+            n = n + 1
 
     # header -> events
-    events = csvdata[0][1:]
-
-    # first item -> competitors
+    events = [item for item in csvdata[0] if item in cubing.EVENTS_ALL]
+    # first column -> competitors
     competitors = [row[0] for row in csvdata[1:]]
 
     # generate entry info
     for row in csvdata[1:]:
         competitor_id = row[0]
+        competitorsname[competitor_id] = row[-1]
         entries[competitor_id] = {}
-        for i, flag in enumerate(row[1:]):
+        for i, flag in enumerate(row[1:-1]):
             if flag != '':
                 entries[competitor_id][events[i]] = True
             else:
                 entries[competitor_id][events[i]] = False
 
-    return {'events': events, 'competitors': competitors, 'entries': entries}
+    return {'events': events, 'competitors': competitors,
+            'competitorsname': competitorsname, 'entries': entries}
 
 
 def find_latest_export():
@@ -86,41 +74,66 @@ def find_latest_export():
 
 def read_wcaresults(compdata, latest_export):
     """ Reads the WCA results. Returns data for psych sheets. """
-    raw, psych = {}, {}
+    raw = {}
 
     # Initialization with events
-    for e in compdata['events']:
-        raw[e] = {}
+    for event in compdata['events']:
+        raw[event] = {}
 
     # Read raw data
     with zipfile.ZipFile(SCRIPT_DIR + WCA_EXPORT_DIR + '/' + latest_export) as zf:
         with zf.open(WCARESULTS_FILENAME, 'r') as f:
             next(f)
             for line in f:
-                items = line.split('\t')
+                items = line.decode('utf-8').split('\t')
                 event_id, best, average = items[1], items[4], items[5]
                 person_name, person_id = items[6], items[7]
-                if (event_id in compdata['events']) and (person_id in compdata['competitors']) and \
-                   compdata['entries'][person_id][event_id]:
-                    record = -1
-                    if event_id in cubing.EVENTS_BEST:
-                        record = int(best)
-                    elif event_id in cubing.EVENTS_AVERAGE:
-                        record = int(average)
-                    if 0 < record:
-                        # Store the record
-                        if (person_id not in raw[event_id]) or (record < raw[event_id][person_id]['value']):
-                            raw[event_id][person_id] = {'value': record,
+                if (event_id in compdata['events']) and (person_id in compdata['competitors']):
+                    compdata['competitorsname'][person_id] = person_name
+                    if compdata['entries'][person_id][event_id]:
+                        record = -1
+                        if event_id in cubing.EVENTS_BEST:
+                            record = int(best)
+                        elif event_id in cubing.EVENTS_AVERAGE:
+                            record = int(average)
+                        if (0 < record) and \
+                           ((person_id not in raw[event_id]) or (record < raw[event_id][person_id]['value'])):
+                            raw[event_id][person_id] = {'id': person_id, 'name': person_name, 'value': record,
                                                         'formatted': cubing.format_record(record, event_id),
-                                                        'id': person_id, 'name': person_name.decode('utf-8')}
+                                                        'haswcaid': True}
 
-    # Sort by record
-    for ek, ev in raw.items():
-        psych[ek] = []
-        print 'In the event of %s......' % (ek)
-        for k, v in sorted(ev.items(), key=lambda x:x[1]['value']):
-            psych[ek].append(v)
-            print '  %s achieves %s' % (k, v['formatted'])
+    # Update new competitors
+    for event in compdata['events']:
+        for competitor_id, entries in compdata['entries'].items():
+            if compdata['entries'][competitor_id][event] and competitor_id not in raw[event]:
+                raw[event][competitor_id] = {'id': competitor_id,
+                                             'name': compdata['competitorsname'][competitor_id],
+                                             'value': VALUE_DNF, 'formatted': '&ndash;',
+                                             'haswcaid': competitor_id[0] != 'N'}
+
+    return raw
+
+
+def generate_psych(wcaresults):
+    """ Generates psych data by sorting. """
+    psych = {}
+    for event_id, event_result in wcaresults.items():
+        newbies = {}
+        psych[event_id] = []
+        print 'In the event of %s......' % (event_id)
+        n = 1
+        for competitor_id, record in sorted(event_result.items(), key=lambda x:x[1]['value']):
+            record['rank'] = n
+            if record['value'] < VALUE_DNF:
+                psych[event_id].append(record)
+                print '  #%d %s achieves %s' % (n, competitor_id, record['formatted'])
+                n = n + 1
+            else:
+                newbies[competitor_id] = record
+
+        for competitor_id, record in sorted(newbies.items(), key=lambda x:x[1]['id']):
+            psych[event_id].append(record)
+            print '  #%d %s is newbie' % (n, competitor_id)
 
     return psych
 
@@ -136,19 +149,16 @@ if __name__ == '__main__':
     # Read competition
     compinfo = read_compinfo(args.competition)
     compdata = read_compdata(args.competition)
-    print 'compinfo:', compinfo
-    print 'compdata:', compdata
+    #print 'compinfo:', compinfo
+    #print 'compdata:', compdata
 
-    #competitors = read_competitors()
-    #events = read_events()
-    #print 'competitors:', competitors
-    #print 'events:', events
-
-    # Read WCA results and store them
+    # Read WCA results and generate psych
     latest_export = find_latest_export()
-    print 'latest_export:', latest_export
-    psych = read_wcaresults(compdata, latest_export)
-    print 'psych: ', psych
+    #print 'latest_export:', latest_export
+    wcaresults = read_wcaresults(compdata, latest_export)
+    psych = generate_psych(wcaresults)
+    #print 'wcaresults:', wcaresults
+    #print 'psych: ', psych
 
     # Generate html
     env = Environment(loader=FileSystemLoader('./', encoding='utf8'))
