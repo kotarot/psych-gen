@@ -29,6 +29,9 @@ For example, run `generate.py --output tohoku-2015.html tohoku-2015`,
 and you will get psych sheets for [Tohoku Open 2015](https://worldcubeassociation.org/results/c.php?i=TohokuOpen2015)
 (_sample/tohoku-2015.txt_ and _sample/tohoku-2015.csv_ are sample data for that competition).
 
+The sample psych sheets looks like this:
+[Psych sheets for Tohoku Open 2015](http://www.terabo.net/psych-sheet/tohoku-2015.html)
+
 
 ## Notes
 
