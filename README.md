@@ -17,7 +17,7 @@ _Python 2.7.10_ and _Jinja2 2.8_ are recommended version because I have develope
 
 1. Go to [WCA results export page](https://worldcubeassociation.org/results/misc/export.html),
 download the latest __TSV ZIP__ file (i.e., _WCA_exportXXX_YYYYMMDD.tsv.zip_),
-and put it in _WCA_export/_ directory.
+and put it in _WCA_export/_ directory. Note: This step will be automated in a future version.
 1. Fill _your-competition.txt_ with the competition information
 ([sample file](sample/tohoku-2015.txt) is in _sample/_ directory).
 1. Fill _your-competition.csv_ with the entry list
