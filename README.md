@@ -1,6 +1,6 @@
-# Psych sheets generator
+# Psych sheet generator
 
-Psych sheets generator for WCA competitions.
+Psych sheet generator for WCA competitions.
 
 
 ## Requirements
