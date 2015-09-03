@@ -3,8 +3,12 @@
 *~
 *.swp
 
-# pyenv file
+# Python (and pyenv) file
+*.pyc
 .python-version
 
 # WCA data
-WCA_export_Results.tsv
+WCA_*.zip
+
+# Output HTML
+*.html
