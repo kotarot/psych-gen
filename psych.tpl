@@ -3,17 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ competition_name }} &mdash; Psych sheets</title>
+  <title>{{ attrs.competition_name }} &mdash; Psych sheets</title>
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
   <link rel="stylesheet" href="http://cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css">
 </head>
 <body>
   <div class="container">
 
-    <h1>{{ competition_name }} &mdash; Psych sheets</h1>
+    <h1>{{ attrs.competition_name }} &mdash; Psych sheets</h1>
 
     <p>
-      All data are base on <a href="https://www.worldcubeassociation.org/results/misc/export.html" target="_blank">WCA database</a> (version XXXX).
+      All data are base on <a href="https://www.worldcubeassociation.org/results/misc/export.html" target="_blank">WCA database</a> (version {{ attrs.database_version }}).
     </p>
 
     <ul class="nav nav-tabs">
@@ -24,7 +24,7 @@
 
     {% for event in events -%}
       <div id="table-container-{{ event }}" class="table-container" style="display:none;">
-        <h2>{{ events_name.get(event) }}</h2>
+        <h2>{{ attrs.events_name.get(event) }}</h2>
         <table id="table-{{ event }}" class="table table-striped">
           <thead><tr>
             <th>#</th>

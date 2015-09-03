@@ -15,7 +15,7 @@ _Python 2.7.10_ and _Jinja2 2.8_ are recommended version because I have develope
 
 ## Usage
 
-1. Go to [WCA results export page](https://worldcubeassociation.org/results/misc/export.html), download the latest __TSV__ files (_WCA_exportXXX_YYYYMMDD.tsv.zip_), unzip it, and put `WCA_export_Results.tsv` in the same directory as `generate.py` is located.
+1. Go to [WCA results export page](https://worldcubeassociation.org/results/misc/export.html), download the latest __TSV ZIP__ file (i.e., _WCA_exportXXX_YYYYMMDD.tsv.zip_), and put it in `WCA_export/` directory.
 1. Fill `competitors.txt` with the competitors list (sample data is already written in the file).
 1. Fill `events.txt` with the events list (sample data is already written in the file).
 1. Run `generate.py`.
