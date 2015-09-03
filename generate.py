@@ -3,14 +3,17 @@
 
 import cubing
 
-from jinja2 import Environment, FileSystemLoader
+import argparse
+import ConfigParser
+import csv
 import glob
+from jinja2 import Environment, FileSystemLoader
 import os
 import zipfile
 
 
-COMPETITORS_FILENAME = 'competitors.txt'
-EVENTS_FILENAME      = 'events.txt'
+#COMPETITORS_FILENAME = 'competitors.txt'
+#EVENTS_FILENAME      = 'events.txt'
 WCARESULTS_FILENAME  = 'WCA_export_Results.tsv'
 PSYCH_TEMPLATE       = 'psych.tpl'
 PSYCH_HTML           = 'psych.html'
@@ -19,22 +22,59 @@ SCRIPT_DIR     = os.path.abspath(os.path.dirname(__file__))
 WCA_EXPORT_DIR = '/WCA_export'
 
 
-def read_competitors():
-    """ Reads competitors list from file. """
-    ret = []
-    with open(COMPETITORS_FILENAME, 'r') as f:
-        for line in f:
-            ret.append(line.replace('\r', '').replace('\n', ''))
-    return ret
+#def read_competitors():
+#    """ Reads competitors list from file. """
+#    ret = []
+#    with open(COMPETITORS_FILENAME, 'r') as f:
+#        for line in f:
+#            ret.append(line.replace('\r', '').replace('\n', ''))
+#    return ret
 
 
-def read_events():
-    """ Reads events list from file. """
-    ret = []
-    with open(EVENTS_FILENAME, 'r') as f:
-        for line in f:
-            ret.append(line.replace('\r', '').replace('\n', ''))
-    return ret
+#def read_events():
+#    """ Reads events list from file. """
+#    ret = []
+#    with open(EVENTS_FILENAME, 'r') as f:
+#        for line in f:
+#            ret.append(line.replace('\r', '').replace('\n', ''))
+#    return ret
+
+
+def read_compinfo(comp):
+    """ Reads competition info (name and description) from .txt """
+    config = ConfigParser.SafeConfigParser()
+    config.read(comp + '.txt')
+    return {'name': config.get('competition', 'name'),
+            'description': config.get('competition', 'description')}
+
+
+def read_compdata(comp):
+    """ Reads competition data from .csv """
+    csvdata, events, competitors, entries = [], [], [], {}
+
+    # Store CSV into dict
+    with open(comp + '.csv', 'r') as f:
+        reader = csv.reader(f)
+        for row in reader:
+            csvdata.append([item.replace(' ', '') for item in row])
+
+    # header -> events
+    events = csvdata[0][1:]
+
+    # first item -> competitors
+    competitors = [row[0] for row in csvdata[1:]]
+
+    # generate entry info
+    for row in csvdata[1:]:
+        competitor_id = row[0]
+        entries[competitor_id] = {}
+        for i, flag in enumerate(row[1:]):
+            if flag != '':
+                entries[competitor_id][events[i]] = True
+            else:
+                entries[competitor_id][events[i]] = False
+
+    return {'events': events, 'competitors': competitors, 'entries': entries}
 
 
 def find_latest_export():
@@ -44,11 +84,12 @@ def find_latest_export():
     return filesd.items()[-1][1]
 
 
-def read_wcaresults(competitors, events, latest_export):
+def read_wcaresults(compdata, latest_export):
     """ Reads the WCA results. Returns data for psych sheets. """
+    raw, psych = {}, {}
+
     # Initialization with events
-    raw = {}
-    for e in events:
+    for e in compdata['events']:
         raw[e] = {}
 
     # Read raw data
@@ -59,7 +100,8 @@ def read_wcaresults(competitors, events, latest_export):
                 items = line.split('\t')
                 event_id, best, average = items[1], items[4], items[5]
                 person_name, person_id = items[6], items[7]
-                if (event_id in events) and (person_id in competitors):
+                if (event_id in compdata['events']) and (person_id in compdata['competitors']) and \
+                   compdata['entries'][person_id][event_id]:
                     record = -1
                     if event_id in cubing.EVENTS_BEST:
                         record = int(best)
@@ -73,7 +115,6 @@ def read_wcaresults(competitors, events, latest_export):
                                                         'id': person_id, 'name': person_name.decode('utf-8')}
 
     # Sort by record
-    psych = {}
     for ek, ev in raw.items():
         psych[ek] = []
         print 'In the event of %s......' % (ek)
@@ -85,26 +126,35 @@ def read_wcaresults(competitors, events, latest_export):
 
 
 if __name__ == '__main__':
-    # Read competitors and events
-    competitors = read_competitors()
-    events = read_events()
-    print 'competitors:', competitors
-    print 'events:', events
+    parser = argparse.ArgumentParser(description='Psych sheets generator')
+    parser.add_argument('competition', nargs=None, default=None, type=str,
+                        help='Input competition name')
+    parser.add_argument('--output', '-o', default='psych.html', type=str,
+                        help='Path to output html')
+    args = parser.parse_args()
+
+    # Read competition
+    compinfo = read_compinfo(args.competition)
+    compdata = read_compdata(args.competition)
+    print 'compinfo:', compinfo
+    print 'compdata:', compdata
+
+    #competitors = read_competitors()
+    #events = read_events()
+    #print 'competitors:', competitors
+    #print 'events:', events
 
     # Read WCA results and store them
     latest_export = find_latest_export()
     print 'latest_export:', latest_export
-    psych = read_wcaresults(competitors, events, latest_export)
-    #print 'psych: ', psych
-
-    # Attributions for html
-    attrs = {'competition_name': 'CompetitionName', 'events_name': cubing.EVENTS_NAME,
-             'database_version': latest_export.split('.')[0]}
+    psych = read_wcaresults(compdata, latest_export)
+    print 'psych: ', psych
 
     # Generate html
     env = Environment(loader=FileSystemLoader('./', encoding='utf8'))
     tpl = env.get_template(PSYCH_TEMPLATE)
-    html = tpl.render({'attrs': attrs, 'events': events, 'psych': psych})
-    with open(PSYCH_HTML, 'w') as f:
+    attrs = {'events_name': cubing.EVENTS_NAME, 'database_version': latest_export.split('.')[0]}
+    html = tpl.render({'attrs': attrs, 'compinfo': compinfo, 'compdata': compdata, 'psych': psych})
+    with open(args.output, 'w') as f:
         f.write(html.encode('utf-8'))
-    print 'Complete writing to %s' % (PSYCH_HTML)
+    print 'Complete writing to %s' % (args.output)
