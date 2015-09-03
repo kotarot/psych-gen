@@ -35,9 +35,13 @@
             </tr></thead><tbody>
             {% for person in psych.get(event) -%}
               <tr>
-                <td>{{ loop.index }}</td>
+                <td>{{ person.rank }}</td>
                 <td>{{ person.name }}</td>
-                <td data-order="{{ person.id }}"><a href="https://www.worldcubeassociation.org/results/p.php?i={{ person.id }}" target="_blank">{{ person.id }}</a></td>
+                {% if person.haswcaid %}
+                  <td data-order="{{ person.id }}"><a href="https://www.worldcubeassociation.org/results/p.php?i={{ person.id }}" target="_blank">{{ person.id }}</a></td>
+                {% else %}
+                  <td data-order="9999ZZZZ99">&ndash;</td>
+                {% endif %}
                 <td data-order="{{ person.value }}">{{ person.formatted }}</td>
                </tr>
             {% endfor %}

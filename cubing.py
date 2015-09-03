@@ -6,6 +6,9 @@ EVENTS_BEST    = ['333bf', '333fm', '444bf', '555bf', '333mbf']
 # Events whose "average" is treated as record
 EVENTS_AVERAGE = ['333', '444', '555', '222', '333oh', '333ft', 'minx', 'pyram',
                   'sq1', 'clock', 'skewb', '666', '777']
+# All events
+EVENTS_ALL = EVENTS_BEST + EVENTS_AVERAGE
+
 # Full events name
 EVENTS_NAME = {
     '333'   : "Rubik's Cube",
