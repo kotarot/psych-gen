@@ -9,3 +9,6 @@
 
 # WCA data
 WCA_*.zip
+
+# Output HTML
+*.html
