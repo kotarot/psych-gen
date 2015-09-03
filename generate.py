@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import Cubing
+import cubing
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -47,15 +47,15 @@ def read_wcaresults(competitors, events):
             event_id, best, average, person_name, person_id = items[1], items[4], items[5], items[6], items[7]
             if (event_id in events) and (person_id in competitors):
                 record = -1
-                if event_id in Cubing.EVENTS_BEST:
+                if event_id in cubing.EVENTS_BEST:
                     record = int(best)
-                elif event_id in Cubing.EVENTS_AVERAGE:
+                elif event_id in cubing.EVENTS_AVERAGE:
                     record = int(average)
                 if 0 < record:
                     # Store the record
                     if (person_id not in raw[event_id]) or (record < raw[event_id][person_id]['value']):
                         raw[event_id][person_id] = {'value': record,
-                                                    'formatted': Cubing.format_record(record, event_id),
+                                                    'formatted': cubing.format_record(record, event_id),
                                                     'id': person_id, 'name': person_name.decode('utf-8')}
 
     # Sort by record
@@ -84,7 +84,7 @@ if __name__ == '__main__':
     # Generate html
     env = Environment(loader=FileSystemLoader('./', encoding='utf8'))
     tpl = env.get_template(PSYCH_TEMPLATE)
-    html = tpl.render({'competition_name': 'CompetitionName', 'events_name': Cubing.EVENTS_NAME,
+    html = tpl.render({'competition_name': 'CompetitionName', 'events_name': cubing.EVENTS_NAME,
                        'events': events, 'psych': psych})
     with open(PSYCH_HTML, 'w') as f:
         f.write(html.encode('utf-8'))
