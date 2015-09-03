@@ -12,14 +12,10 @@ import os
 import zipfile
 
 
-#COMPETITORS_FILENAME = 'competitors.txt'
-#EVENTS_FILENAME      = 'events.txt'
+SCRIPT_DIR           = os.path.abspath(os.path.dirname(__file__))
+WCA_EXPORT_DIR       = '/WCA_export'
 WCARESULTS_FILENAME  = 'WCA_export_Results.tsv'
 PSYCH_TEMPLATE       = 'psych.tpl'
-PSYCH_HTML           = 'psych.html'
-
-SCRIPT_DIR     = os.path.abspath(os.path.dirname(__file__))
-WCA_EXPORT_DIR = '/WCA_export'
 
 
 def read_compinfo(comp):
