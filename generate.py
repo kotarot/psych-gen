@@ -118,7 +118,7 @@ def generate_psych(wcaresults):
     """ Generates psych data by sorting. """
     psych = {}
     for event_id, event_result in wcaresults.items():
-        newbies = {}
+        noobs = {}
         psych[event_id] = []
         print 'In the event of %s......' % (event_id)
         n = 1
@@ -129,11 +129,11 @@ def generate_psych(wcaresults):
                 print '  #%d %s achieves %s' % (n, competitor_id, record['formatted'])
                 n = n + 1
             else:
-                newbies[competitor_id] = record
+                noobs[competitor_id] = record
 
-        for competitor_id, record in sorted(newbies.items(), key=lambda x:x[1]['id']):
+        for competitor_id, record in sorted(noobs.items(), key=lambda x:x[1]['id']):
             psych[event_id].append(record)
-            print '  #%d %s is newbie' % (n, competitor_id)
+            print '  #%d %s is noob' % (n, competitor_id)
 
     return psych
 
