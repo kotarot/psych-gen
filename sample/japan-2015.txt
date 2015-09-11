@@ -1,0 +1,3 @@
+[competition]
+name = 日本大会2015
+description = 大会ページ: <a href="https://www.worldcubeassociation.org/results/c.php?i=JapanOpen2015" target="_blank">WCA</a>, <a href="http://jrca.cc/modules/eguide/event.php?eid=94" target="_blank">JRCA</a>
