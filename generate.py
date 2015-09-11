@@ -155,13 +155,15 @@ if __name__ == '__main__':
     # Read WCA results and generate psych
     latest_export = find_latest_export()
     wcaresults = read_wcaresults(compdata, latest_export)
-    psych = generate_psych(wcaresults)
 
     if args.list_competitors:
         for competitor in compdata['competitors']:
             print competitor, compdata['competitorsname'][competitor]
 
     else:
+        # Generate psych
+        psych = generate_psych(wcaresults)
+
         # Generate html
         env = Environment(loader=FileSystemLoader('./', encoding='utf8'))
         tpl = env.get_template(PSYCH_TEMPLATE)
