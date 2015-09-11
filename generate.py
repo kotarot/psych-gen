@@ -144,27 +144,29 @@ if __name__ == '__main__':
                         help='Input competition name')
     parser.add_argument('--output', '-o', default='psych.html', type=str,
                         help='Path to output html')
+    parser.add_argument('--list-competitors', '-l', default=False, action='store_true',
+                        help='Just print list of competitors')
     args = parser.parse_args()
 
     # Read competition
     compinfo = read_compinfo(args.competition)
     compdata = read_compdata(args.competition)
-    #print 'compinfo:', compinfo
-    #print 'compdata:', compdata
 
     # Read WCA results and generate psych
     latest_export = find_latest_export()
-    #print 'latest_export:', latest_export
     wcaresults = read_wcaresults(compdata, latest_export)
     psych = generate_psych(wcaresults)
-    #print 'wcaresults:', wcaresults
-    #print 'psych: ', psych
 
-    # Generate html
-    env = Environment(loader=FileSystemLoader('./', encoding='utf8'))
-    tpl = env.get_template(PSYCH_TEMPLATE)
-    attrs = {'events_name': cubing.EVENTS_NAME, 'database_version': latest_export.split('.')[0]}
-    html = tpl.render({'attrs': attrs, 'compinfo': compinfo, 'compdata': compdata, 'psych': psych})
-    with open(args.output, 'w') as f:
-        f.write(html.encode('utf-8'))
-    print 'Complete writing to %s' % (args.output)
+    if args.list_competitors:
+        for competitor in compdata['competitors']:
+            print competitor, compdata['competitorsname'][competitor]
+
+    else:
+        # Generate html
+        env = Environment(loader=FileSystemLoader('./', encoding='utf8'))
+        tpl = env.get_template(PSYCH_TEMPLATE)
+        attrs = {'events_name': cubing.EVENTS_NAME, 'database_version': latest_export.split('.')[0]}
+        html = tpl.render({'attrs': attrs, 'compinfo': compinfo, 'compdata': compdata, 'psych': psych})
+        with open(args.output, 'w') as f:
+            f.write(html.encode('utf-8'))
+        print 'Complete writing to %s' % (args.output)
