@@ -48,8 +48,8 @@
     {% endfor %}
 
     <p style="margin-top: 20px;">
-      Result data is courtesy of the <a href="http://www.worldcubeassociation.org/" target="_blank">World Cube Association</a>.
-      The latest results can be found via the <a href="http://worldcubeassociation.org/results/" target="_blank">WCA Results Pages</a>.
+      Result data is courtesy of the <a href="https://www.worldcubeassociation.org/" target="_blank">World Cube Association</a>.
+      The latest results can be found via the <a href="https://www.worldcubeassociation.org/results/" target="_blank">WCA Results Pages</a>.
       Data was last updated on {{ attrs.date_fetched }}.
     </p>
 
