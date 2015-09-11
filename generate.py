@@ -25,8 +25,8 @@ def read_compinfo(comp):
     """ Reads competition info (name and description) from .txt """
     config = ConfigParser.SafeConfigParser()
     config.read(comp + '.txt')
-    return {'name': config.get('competition', 'name'),
-            'description': config.get('competition', 'description')}
+    return {'name': config.get('competition', 'name').decode('utf-8'),
+            'description': config.get('competition', 'description').decode('utf-8')}
 
 
 def read_compdata(comp):
