@@ -6,6 +6,7 @@ import cubing
 import argparse
 import ConfigParser
 import csv
+import datetime
 import glob
 from jinja2 import Environment, FileSystemLoader
 import os
@@ -165,9 +166,11 @@ if __name__ == '__main__':
         psych = generate_psych(wcaresults)
 
         # Generate html
+        dt = datetime.datetime.fromtimestamp(os.stat(SCRIPT_DIR + WCA_EXPORT_DIR + '/' + latest_export).st_mtime)
+        attrs = {'events_name': cubing.EVENTS_NAME, 'database_version': latest_export.split('.')[0],
+                 'date_fetched': dt.strftime('%Y-%m-%d')}
         env = Environment(loader=FileSystemLoader('./', encoding='utf8'))
         tpl = env.get_template(PSYCH_TEMPLATE)
-        attrs = {'events_name': cubing.EVENTS_NAME, 'database_version': latest_export.split('.')[0]}
         html = tpl.render({'attrs': attrs, 'compinfo': compinfo, 'compdata': compdata, 'psych': psych})
         with open(args.output, 'w') as f:
             f.write(html.encode('utf-8'))
