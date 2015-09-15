@@ -32,7 +32,7 @@ def read_compinfo(comp):
 
 def read_compdata(comp):
     """ Reads competition data from .csv """
-    csvdata, events, competitors, competitorsname, competitorscountry, entries = [], [], [], {}, {}, {}
+    csvdata, competitorsname, competitorscountry, entries = [], {}, {}, {}
 
     # Store CSV into dict
     with open(comp + '.csv', 'r') as f:
