@@ -13,10 +13,11 @@ import os
 import zipfile
 
 
-SCRIPT_DIR           = os.path.abspath(os.path.dirname(__file__))
-WCA_EXPORT_DIR       = '/WCA_export'
-WCARESULTS_FILENAME  = 'WCA_export_Results.tsv'
-PSYCH_TEMPLATE       = 'psych.tpl'
+SCRIPT_DIR            = os.path.abspath(os.path.dirname(__file__))
+WCA_EXPORT_DIR        = '/WCA_export'
+WCACOUNTRIES_FILENAME = 'WCA_export_Countries.tsv'
+WCARESULTS_FILENAME   = 'WCA_export_Results.tsv'
+PSYCH_TEMPLATE        = 'psych.tpl'
 
 VALUE_DNF = 9999999999
 
@@ -75,7 +76,22 @@ def find_latest_export():
     return filesd.items()[-1][1]
 
 
-def read_wcaresults(compdata, latest_export):
+def read_wcacountries(latest_export):
+    """ Reads the WCA countries. """
+    countries = {'unknown': {'name': 'Unknown', 'iso2': '_unknown'}}
+
+    # Read countries data
+    with zipfile.ZipFile(SCRIPT_DIR + WCA_EXPORT_DIR + '/' + latest_export) as zf:
+        with zf.open(WCACOUNTRIES_FILENAME, 'r') as f:
+            next(f)
+            for line in f:
+                items = line.decode('utf-8').strip().split('\t')
+                countries[items[0]] = {'name': items[2], 'iso2': items[6]}
+
+    return countries
+
+
+def read_wcaresults(compdata, countries, latest_export):
     """ Reads the WCA results. Returns data for psych sheets. """
     raw = {}
 
@@ -103,7 +119,9 @@ def read_wcaresults(compdata, latest_export):
                         if (0 < record) and \
                            ((person_id not in raw[event_id]) or (record < raw[event_id][person_id]['value'])):
                             raw[event_id][person_id] = {'id': person_id, 'name': person_name,
-                                                        'country': person_country, 'value': record,
+                                                        'country': person_country,
+                                                        'countryiso2': countries[person_country]['iso2'],
+                                                        'value': record,
                                                         'formatted': cubing.format_record(record, event_id),
                                                         'haswcaid': True}
 
@@ -111,9 +129,11 @@ def read_wcaresults(compdata, latest_export):
     for event in compdata['events']:
         for competitor_id, entries in compdata['entries'].items():
             if compdata['entries'][competitor_id][event] and competitor_id not in raw[event]:
+                competitor_country = compdata['competitorscountry'][competitor_id]
                 raw[event][competitor_id] = {'id': competitor_id,
                                              'name': compdata['competitorsname'][competitor_id],
-                                             'country': compdata['competitorscountry'][competitor_id],
+                                             'country': competitor_country,
+                                             'countryiso2': countries[competitor_country]['iso2'],
                                              'value': VALUE_DNF, 'formatted': '&ndash;',
                                              'haswcaid': competitor_id[0] != 'N'}
 
@@ -160,7 +180,8 @@ if __name__ == '__main__':
 
     # Read WCA results and generate psych
     latest_export = find_latest_export()
-    wcaresults = read_wcaresults(compdata, latest_export)
+    wcacountries = read_wcacountries(latest_export)
+    wcaresults = read_wcaresults(compdata, wcacountries, latest_export)
 
     if args.list_competitors:
         for competitor in compdata['competitors']:

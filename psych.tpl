@@ -37,7 +37,10 @@
               <tr>
                 <td>{{ person.rank }}</td>
                 <td>{{ person.name }}</td>
-                <td>{{ person.country }}</td>
+                <td>
+                  <img src="flags/flags-iso/shiny/24/{{ person.countryiso2 }}.png" width="24" height="24" alt="{{ person.country }}">
+                  {{ person.country }}
+                </td>
                 {% if person.haswcaid %}
                   <td data-order="{{ person.id }}"><a href="https://www.worldcubeassociation.org/results/p.php?i={{ person.id }}" target="_blank">{{ person.id }}</a></td>
                 {% else %}
