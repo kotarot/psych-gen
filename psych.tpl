@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="http://cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css">
 </head>
 <body>
-  <div class="container">
+  <div class="container" style="padding-right: 5px; padding-left: 5px;">
 
     <h1>{{ compinfo.name }} &mdash; Psych sheets</h1>
 
@@ -28,23 +28,34 @@
         <table id="table-{{ event }}" class="table table-striped">
           <thead><tr>
             <th>#</th>
-            <th>Name</th>
-            <th>Country</th>
-            <th>ID</th>
+            <th class="col-desktop">Name</th>
+            <th class="col-desktop">Country</th>
+            <th class="col-desktop">WCA ID</th>
+            <th class="col-mobile">Name</th>
             <th>Record</th>
             </tr></thead><tbody>
             {% for person in psych.get(event) -%}
               <tr>
                 <td>{{ person.rank }}</td>
-                <td>{{ person.name }}</td>
-                <td>
+                <td class="col-desktop">{{ person.name }}</td>
+                <td class="col-desktop">
                   <img src="flags/flags-iso/shiny/24/{{ person.countryiso2 }}.png" width="24" height="24" alt="{{ person.country }}">
                   {{ person.country }}
                 </td>
                 {% if person.haswcaid %}
-                  <td data-order="{{ person.id }}"><a href="https://www.worldcubeassociation.org/results/p.php?i={{ person.id }}" target="_blank">{{ person.id }}</a></td>
+                  <td class="col-desktop" data-order="{{ person.id }}">
+                    <a href="https://www.worldcubeassociation.org/results/p.php?i={{ person.id }}" target="_blank">{{ person.id }}</a>
+                  </td>
+                  <td class="col-mobile" data-order="{{ person.name }}">
+                    <img src="flags/flags-iso/shiny/16/{{ person.countryiso2 }}.png" width="16" height="16" alt="{{ person.country }}">
+                      <a href="https://www.worldcubeassociation.org/results/p.php?i={{ person.id }}" target="_blank">{{ person.name }}</a>
+                  </td>
                 {% else %}
-                  <td data-order="9999ZZZZ99">&ndash;</td>
+                  <td class="col-desktop" data-order="9999ZZZZ99">&ndash;</td>
+                  <td class="col-mobile" data-order="{{ person.name }}">
+                    <img src="flags/flags-iso/shiny/16/{{ person.countryiso2 }}.png" width="16" height="16" alt="{{ person.country }}">
+                    {{ person.name }}</a>
+                  </td>
                 {% endif %}
                 <td data-order="{{ person.value }}">{{ person.formatted }}</td>
                </tr>
@@ -74,6 +85,17 @@
 table, thead th {
     border-bottom: 2px solid #DDD !important;
 }
+th, td {
+    padding: 8px !important;
+}
+@media (max-width: 768px) {
+    .col-desktop { display: none !important; }
+    .col-mobile  { display: table-cell !important; }
+}
+@media (min-width: 768px) {
+    .col-desktop { display: table-cell !important; }
+    .col-mobile  { display: none !important; }
+}
 footer {
     margin-top: 30px;
     padding-top: 20px;
@@ -94,7 +116,7 @@ $(document).ready(function() {
 // Datatables
 $(document).ready(function() {
     $('.table').DataTable({
-        'bPaginate': false, 'order': [[04, 'asc']],
+        'bPaginate': false, 'order': [[5, 'asc']],
         'columnDefs': [{'orderable': false, 'targets': 0}]
     });
 });
