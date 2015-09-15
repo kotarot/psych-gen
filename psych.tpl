@@ -14,11 +14,13 @@
 
     <p>{{ compinfo.description }}</p>
 
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-pills">
       {% for event in compdata.events -%}
         <li id="nav-{{ event }}" class="nav-event"><a href="#{{ event }}">{{ event }}</a></li>
       {% endfor %}
     </ul>
+
+    <hr style="margin-top: 0;">
 
     {% for event in compdata.events -%}
       <div id="table-container-{{ event }}" class="table-container" style="display:none;">
@@ -61,6 +63,9 @@
   </div><!-- /.container -->
 
 <style>
+.nav > li > a {
+    padding: 10px 12px;
+}
 table, thead th {
     border-bottom: 2px solid #DDD !important;
 }
