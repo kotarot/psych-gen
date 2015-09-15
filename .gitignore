@@ -1,7 +1,9 @@
 # Typical
 .DS_Store
-*~
+Thumbs.db
 *.swp
+*~
+~*
 
 # Python (and pyenv) file
 *.pyc
