@@ -72,8 +72,8 @@ def read_compdata(comp):
 def find_latest_export():
     """ Finds the latest WCA export in `WCA_export` directory. """
     files = glob.glob(SCRIPT_DIR + WCA_EXPORT_DIR + '/WCA_export*.tsv.zip')
-    filesd = {os.path.basename(file)[14:22]: os.path.basename(file) for file in files}
-    return filesd.items()[-1][1]
+    files_dict = {os.path.basename(file)[14:22]: os.path.basename(file) for file in files}
+    return sorted(files_dict.items())[-1][1]
 
 
 def read_wcacountries(latest_export):
