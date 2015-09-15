@@ -93,7 +93,10 @@ $(document).ready(function() {
 
 // Datatables
 $(document).ready(function() {
-    $('.table').DataTable({'bPaginate': false, 'order': [[0, 'asc']]});
+    $('.table').DataTable({
+        'bPaginate': false, 'order': [[04, 'asc']],
+        'columnDefs': [{'orderable': false, 'targets': 0}]
+    });
 });
 
 // Switch event (when hash changes)
