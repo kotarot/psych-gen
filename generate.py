@@ -31,7 +31,7 @@ def read_compinfo(comp):
 
 def read_compdata(comp):
     """ Reads competition data from .csv """
-    csvdata, events, competitors, competitorsname, entries = [], [], [], {}, {}
+    csvdata, events, competitors, competitorsname, competitorscountry, entries = [], [], [], {}, {}, {}
 
     # Store CSV into dict
     with open(comp + '.csv', 'r') as f:
@@ -55,6 +55,7 @@ def read_compdata(comp):
     for row in csvdata[1:]:
         competitor_id = row[0]
         competitorsname[competitor_id] = row[-1]
+        competitorscountry[competitor_id] = 'unknown'
         entries[competitor_id] = {}
         for i, flag in enumerate(row[1:-1]):
             if flag != '':
@@ -63,7 +64,8 @@ def read_compdata(comp):
                 entries[competitor_id][events[i]] = False
 
     return {'events': events, 'competitors': competitors,
-            'competitorsname': competitorsname, 'entries': entries}
+            'competitorsname': competitorsname, 'competitorscountry': {},
+            'entries': entries}
 
 
 def find_latest_export():
@@ -88,9 +90,10 @@ def read_wcaresults(compdata, latest_export):
             for line in f:
                 items = line.decode('utf-8').split('\t')
                 event_id, best, average = items[1], items[4], items[5]
-                person_name, person_id = items[6], items[7]
+                person_name, person_id, person_country = items[6], items[7], items[8]
                 if (event_id in compdata['events']) and (person_id in compdata['competitors']):
                     compdata['competitorsname'][person_id] = person_name
+                    compdata['competitorscountry'][person_id] = person_country
                     if compdata['entries'][person_id][event_id]:
                         record = -1
                         if event_id in cubing.EVENTS_BEST:
@@ -99,7 +102,8 @@ def read_wcaresults(compdata, latest_export):
                             record = int(average)
                         if (0 < record) and \
                            ((person_id not in raw[event_id]) or (record < raw[event_id][person_id]['value'])):
-                            raw[event_id][person_id] = {'id': person_id, 'name': person_name, 'value': record,
+                            raw[event_id][person_id] = {'id': person_id, 'name': person_name,
+                                                        'country': person_country, 'value': record,
                                                         'formatted': cubing.format_record(record, event_id),
                                                         'haswcaid': True}
 
@@ -109,6 +113,7 @@ def read_wcaresults(compdata, latest_export):
             if compdata['entries'][competitor_id][event] and competitor_id not in raw[event]:
                 raw[event][competitor_id] = {'id': competitor_id,
                                              'name': compdata['competitorsname'][competitor_id],
+                                             'country': compdata['competitorscountry'][competitor_id],
                                              'value': VALUE_DNF, 'formatted': '&ndash;',
                                              'haswcaid': competitor_id[0] != 'N'}
 

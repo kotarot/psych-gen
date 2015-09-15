@@ -29,6 +29,7 @@
           <thead><tr>
             <th>#</th>
             <th>Name</th>
+            <th>Country</th>
             <th>ID</th>
             <th>Record</th>
             </tr></thead><tbody>
@@ -36,6 +37,7 @@
               <tr>
                 <td>{{ person.rank }}</td>
                 <td>{{ person.name }}</td>
+                <td>{{ person.country }}</td>
                 {% if person.haswcaid %}
                   <td data-order="{{ person.id }}"><a href="https://www.worldcubeassociation.org/results/p.php?i={{ person.id }}" target="_blank">{{ person.id }}</a></td>
                 {% else %}
