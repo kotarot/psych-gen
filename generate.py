@@ -56,7 +56,7 @@ def read_compdata(comp):
     for row in csvdata[1:]:
         competitor_id = row[0]
         competitorsname[competitor_id] = row[-1]
-        competitorscountry[competitor_id] = 'unknown'
+        competitorscountry[competitor_id] = 'Unknown'
         entries[competitor_id] = {}
         for i, flag in enumerate(row[1:-1]):
             if flag != '':
@@ -65,7 +65,7 @@ def read_compdata(comp):
                 entries[competitor_id][events[i]] = False
 
     return {'events': events, 'competitors': competitors,
-            'competitorsname': competitorsname, 'competitorscountry': {},
+            'competitorsname': competitorsname, 'competitorscountry': competitorscountry,
             'entries': entries}
 
 
@@ -78,7 +78,7 @@ def find_latest_export():
 
 def read_wcacountries(latest_export):
     """ Reads the WCA countries. """
-    countries = {'unknown': {'name': 'Unknown', 'iso2': '_unknown'}}
+    countries = {'Unknown': {'name': 'Unknown', 'iso2': '_unknown'}}
 
     # Read countries data
     with zipfile.ZipFile(SCRIPT_DIR + WCA_EXPORT_DIR + '/' + latest_export) as zf:
