@@ -14,7 +14,7 @@
 
     <p>{{ compinfo.description }}</p>
 
-    <ul class="nav nav-pills">
+    <ul id="nav-events" class="nav nav-pills">
       {% for event in compdata.events -%}
         <li id="nav-{{ event }}" class="nav-event"><a href="#{{ event }}">{{ event }}</a></li>
       {% endfor %}
@@ -79,7 +79,7 @@
   </div><!-- /.container -->
 
 <style>
-.nav > li > a {
+#nav-events > li > a {
     padding: 10px 12px;
 }
 table, thead th {
@@ -91,6 +91,9 @@ th, td {
 @media (max-width: 768px) {
     .col-desktop { display: none !important; }
     .col-mobile  { display: table-cell !important; }
+    h1 { font-size: 30px; }
+    h2 { font-size: 20px; }
+    th, td { letter-spacing: -1px; }
 }
 @media (min-width: 768px) {
     .col-desktop { display: table-cell !important; }
