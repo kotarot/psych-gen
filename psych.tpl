@@ -32,7 +32,7 @@
             <th class="col-desktop">Country</th>
             <th class="col-desktop">WCA ID</th>
             <th class="col-mobile">Name</th>
-            <th>Record</th>
+            <th class="col-record">Record</th>
             </tr></thead><tbody>
             {% for person in psych.get(event) -%}
               <tr>
@@ -122,17 +122,18 @@ $(document).ready(function() {
 });
 
 // Switch event (when hash changes)
+var current_event = '333';
 var swevent = function() {
     if (location.hash) {
-        var e = location.hash.replace('#', '');
+        current_event = location.hash.replace('#', '');
 
         // Activate tab
         $('li.nav-event').removeClass('active');
-        $('li#nav-' + e).addClass('active');
+        $('li#nav-' + current_event).addClass('active');
 
         // Display table
         $('div.table-container').hide();
-        $('div#table-container-' + e).show();
+        $('div#table-container-' + current_event).show();
     }
 };
 $(document).ready(function() {
