@@ -32,7 +32,7 @@
             <th class="col-desktop">Country</th>
             <th class="col-desktop">WCA ID</th>
             <th class="col-mobile">Name</th>
-            <th>Record</th>
+            <th class="col-record">Record</th>
             </tr></thead><tbody>
             {% for person in psych.get(event) -%}
               <tr>
