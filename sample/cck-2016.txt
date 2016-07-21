@@ -1,0 +1,3 @@
+[competition]
+name = キューブキャンプ in 金沢 2016
+description = 2016-07-21申し込み時点。大会ページ: <a href="https://www.worldcubeassociation.org/competitions/CubeCampinKanazawa2016" target="_blank">WCA</a>, <a href="http://jrca.cc/modules/eguide/event.php?eid=106" target="_blank">JRCA</a>
