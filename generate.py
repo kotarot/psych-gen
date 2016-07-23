@@ -4,12 +4,15 @@
 import cubing
 
 import argparse
+from bs4 import BeautifulSoup
 import ConfigParser
 import csv
 import datetime
 import glob
 from jinja2 import Environment, FileSystemLoader
 import os
+import re
+import urllib2
 import zipfile
 
 
@@ -18,6 +21,8 @@ WCA_EXPORT_DIR        = '/WCA_export'
 WCACOUNTRIES_FILENAME = 'WCA_export_Countries.tsv'
 WCARESULTS_FILENAME   = 'WCA_export_Results.tsv'
 PSYCH_TEMPLATE        = 'psych.tpl'
+
+WCA_EXPORT_URL        = 'https://www.worldcubeassociation.org/results/misc'
 
 VALUE_DNF = 9999999999
 
@@ -67,6 +72,17 @@ def read_compdata(comp):
     return {'events': events, 'competitors': competitors,
             'competitorsname': competitorsname, 'competitorscountry': competitorscountry,
             'entries': entries}
+
+
+def download_export():
+    """ Downloads the latest WCA export. """
+    html = urllib2.urlopen(WCA_EXPORT_URL + '/export.html')
+    soup = BeautifulSoup(html, 'html.parser')
+    latest = soup.find('dl').find_all('a', href=re.compile('tsv'))[0].get('href')
+    zippath = SCRIPT_DIR + WCA_EXPORT_DIR + '/' + latest
+    if not os.path.isfile(zippath):
+        with open(zippath, 'wb') as file:
+            file.write(urllib2.urlopen(WCA_EXPORT_URL + '/' + latest).read())
 
 
 def find_latest_export():
@@ -179,6 +195,7 @@ if __name__ == '__main__':
     compdata = read_compdata(args.competition)
 
     # Read WCA results and generate psych
+    download_export()
     latest_export = find_latest_export()
     wcacountries = read_wcacountries(latest_export)
     wcaresults = read_wcaresults(compdata, wcacountries, latest_export)
