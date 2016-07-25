@@ -188,6 +188,8 @@ if __name__ == '__main__':
                         help='Path to output html')
     parser.add_argument('--list-competitors', '-l', default=False, action='store_true',
                         help='Just print list of competitors')
+    parser.add_argument('--count', '-c', default=None, type=str,
+                        help='Count competitors in the specified event (e.g. --count=333,444,555 means it counts ones who participate in 333, 444, or 555)')
     args = parser.parse_args()
 
     # Read competition
@@ -203,6 +205,16 @@ if __name__ == '__main__':
     if args.list_competitors:
         for competitor in compdata['competitors']:
             print competitor, compdata['competitorsname'][competitor]
+
+    elif args.count:
+        n = 0
+        for wcaid, events in compdata['entries'].items():
+            for e in args.count.split(','):
+                if events[e]:
+                    print wcaid
+                    n = n + 1
+                    break
+        print n
 
     else:
         # Generate psych
