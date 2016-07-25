@@ -186,8 +186,8 @@ if __name__ == '__main__':
                         help='Input competition name')
     parser.add_argument('--output', '-o', default='psych.html', type=str,
                         help='Path to output html')
-    parser.add_argument('--list-competitors', '-l', default=False, action='store_true',
-                        help='Just print list of competitors')
+    parser.add_argument('--list', '-l', default=False, action='store_true',
+                        help='Print list of competitors')
     parser.add_argument('--count', '-c', default=None, type=str,
                         help='Count competitors in the specified event (e.g. --count=333,444,555 means it counts ones who participate in 333, 444, or 555)')
     args = parser.parse_args()
