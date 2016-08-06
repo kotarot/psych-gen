@@ -202,7 +202,7 @@ if __name__ == '__main__':
     wcacountries = read_wcacountries(latest_export)
     wcaresults = read_wcaresults(compdata, wcacountries, latest_export)
 
-    if args.list_competitors:
+    if args.list:
         for competitor in compdata['competitors']:
             print competitor, compdata['competitorsname'][competitor]
 
