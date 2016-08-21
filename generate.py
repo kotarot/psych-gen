@@ -21,6 +21,7 @@ WCA_EXPORT_DIR        = '/WCA_export'
 WCACOUNTRIES_FILENAME = 'WCA_export_Countries.tsv'
 WCARESULTS_FILENAME   = 'WCA_export_Results.tsv'
 PSYCH_TEMPLATE        = 'psych.tpl'
+PSYCH_TEMPLATE_TRIBOX = 'psych_tribox.tpl'
 
 WCA_EXPORT_URL        = 'https://www.worldcubeassociation.org/results/misc'
 
@@ -186,6 +187,8 @@ if __name__ == '__main__':
                         help='Input competition name')
     parser.add_argument('--output', '-o', default='psych.html', type=str,
                         help='Path to output html')
+    parser.add_argument('--tribox', '-t', default=False, action='store_true',
+                        help='Output as tribox page format')
     parser.add_argument('--list', '-l', default=False, action='store_true',
                         help='Print list of competitors')
     parser.add_argument('--count', '-c', default=None, type=str,
@@ -225,7 +228,10 @@ if __name__ == '__main__':
         attrs = {'events_name': cubing.EVENTS_NAME, 'database_version': latest_export.split('.')[0],
                  'date_fetched': dt.strftime('%Y-%m-%d')}
         env = Environment(loader=FileSystemLoader('./', encoding='utf8'))
-        tpl = env.get_template(PSYCH_TEMPLATE)
+        if args.tribox:
+            tpl = env.get_template(PSYCH_TEMPLATE_TRIBOX)
+        else:
+            tpl = env.get_template(PSYCH_TEMPLATE)
         html = tpl.render({'attrs': attrs, 'compinfo': compinfo, 'compdata': compdata, 'psych': psych})
         with open(args.output, 'w') as f:
             f.write(html.encode('utf-8'))
