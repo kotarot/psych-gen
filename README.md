@@ -9,6 +9,7 @@ Following python version and some python libraries are required:
 
 * Python 2.7
 * Jinja2
+* BeautifulSoup4
 
 *Python 2.7.10* and *Jinja2 2.8* are recommended version because I have developed and tested with them.
 
