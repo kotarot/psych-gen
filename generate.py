@@ -24,6 +24,7 @@ PSYCH_TEMPLATE        = 'psych.tpl'
 PSYCH_TEMPLATE_TRIBOX = 'psych_tribox.tpl'
 
 WCA_EXPORT_URL        = 'https://www.worldcubeassociation.org/results/misc'
+JRCA_EVENT_URL        = 'http://jrca.cc/modules/eguide/event.php'
 
 VALUE_DNF = 9999999999
 
@@ -69,6 +70,54 @@ def read_compdata(comp):
                 entries[competitor_id][events[i]] = True
             else:
                 entries[competitor_id][events[i]] = False
+
+    return {'events': events, 'competitors': competitors,
+            'competitorsname': competitorsname, 'competitorscountry': competitorscountry,
+            'entries': entries}
+
+
+def download_compdata(events, eid):
+    """ Downloads registered data from JRCA. """
+    html = urllib2.urlopen(JRCA_EVENT_URL + '?eid=' + str(eid))
+    soup = BeautifulSoup(html, 'html.parser')
+    html_table = str(soup.find(class_='evlist').find('table'))
+    # JRCA's html doesn't contain </br> close tags!
+    html_table = html_table.replace('<tr', '</tr><tr')
+    soup_table = BeautifulSoup(html_table, 'html.parser')
+    soup_tr = soup_table.find_all('tr')
+
+    # For WCA ID pattern match
+    wcaid_pattern = r"[0-9]{4}[A-Z]{4}[0-9]{2}"
+    wcaid_repatter = re.compile(wcaid_pattern)
+
+    competitors, competitorsname, competitorscountry, entries = [], {}, {}, {}
+    num_events = len(events)
+    n = 1
+    for tr in soup_tr:
+        soup_td = tr.find_all('td')
+        # 'td_data' is a list which contains entry list's raw text data.
+        #   td_data = [ #, lastname, firstname, wca id, location, event ...... ]
+        td_data = []
+        for td in soup_td:
+            td_data.append(td.get_text())
+        if len(td_data) == num_events + 5:
+            wca_id = ''
+            name = ''
+            if wcaid_repatter.match(td_data[3]):
+                wca_id = td_data[3]
+                competitors.append(wca_id)
+            else:
+                wca_id = 'N_%03d' % n
+                n = n + 1
+                competitors.append(wca_id)
+                name = td_data[1].split(' ')[0] + ' ' + td_data[2]
+            competitorsname[wca_id] = name
+            competitorscountry[wca_id] = 'Unknown'
+            entries[wca_id] = {}
+            ei = 0
+            for attend in td_data[5:]:
+                entries[wca_id][events[ei]] = (attend != '')
+                ei = ei + 1
 
     return {'events': events, 'competitors': competitors,
             'competitorsname': competitorsname, 'competitorscountry': competitorscountry,
@@ -185,6 +234,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Psych sheets generator')
     parser.add_argument('competition', nargs=None, default=None, type=str,
                         help='Input competition name')
+    parser.add_argument('--auto', '-a', default=None, type=int,
+                        help="Specify eid in JRCA page and the tool gather registered data automatically (e.g. --auto='112')")
     parser.add_argument('--output', '-o', default='psych.html', type=str,
                         help='Path to output html')
     parser.add_argument('--tribox', '-t', default=False, action='store_true',
@@ -198,6 +249,9 @@ if __name__ == '__main__':
     # Read competition
     compinfo = read_compinfo(args.competition)
     compdata = read_compdata(args.competition)
+    # If auto gatering option is set, overwrite compdata
+    if args.auto:
+        compdata = download_compdata(compdata['events'], args.auto)
 
     # Read WCA results and generate psych
     download_export()
