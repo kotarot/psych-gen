@@ -20,6 +20,7 @@ Following python version and some python libraries are required:
 ([sample file](sample/tohoku-2015.txt) is in *sample/* directory).
 1. Fill *your-competition.csv* with the entry list
 ([sample file](sample/tohoku-2015.csv) is in *sample/* directory).
+If you specify `auto` argument, only events list is needed.
 1. Run `python generate.py --output path-to-psych.html your-competition`,
 and you will soon get psych sheets in your *path-to-psych.html*
 
