@@ -14,3 +14,6 @@ WCA_*.zip
 
 # Output HTML
 *.html
+
+# Excluding samples
+sample/tribox*
