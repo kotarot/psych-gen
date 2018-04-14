@@ -152,7 +152,7 @@ def read_wcacountries(latest_export):
             next(f)
             for line in f:
                 items = line.decode('utf-8').strip().split('\t')
-                countries[items[0]] = {'name': items[2], 'iso2': items[6]}
+                countries[items[0]] = {'name': items[1], 'iso2': items[3]}
 
     return countries
 
