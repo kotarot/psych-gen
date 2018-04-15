@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ compinfo.name }} &mdash; Psych sheets</title>
+  <title>{{ compinfo.name }} &mdash; Psych sheet</title>
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
   <link rel="stylesheet" href="http://cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css">
   <link rel="shortcut icon" href="/favicon.ico">
@@ -24,7 +24,7 @@
       </div>
     </nav>
 
-    <h1>{{ compinfo.name }} &mdash; Psych sheets</h1>
+    <h1>{{ compinfo.name }} &mdash; Psych sheet</h1>
 
     <p>{{ compinfo.description }}</p>
 
