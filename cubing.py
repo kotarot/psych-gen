@@ -2,23 +2,23 @@
 # -*- coding: utf-8 -*-
 
 # Events whose "best (single)" is treated as record
-EVENTS_BEST    = ['333bf', '333fm', '444bf', '555bf', '333mbf']
+EVENTS_BEST    = ['333bf', '444bf', '555bf', '333mbf']
 # Events whose "average" is treated as record
-EVENTS_AVERAGE = ['333', '444', '555', '222', '333oh', '333ft', 'minx', 'pyram',
+EVENTS_AVERAGE = ['333', '444', '555', '222', '333oh', '333ft', '333fm', 'minx', 'pyram',
                   'sq1', 'clock', 'skewb', '666', '777']
 # All events
 EVENTS_ALL = EVENTS_BEST + EVENTS_AVERAGE
 
 # Full events name
 EVENTS_NAME = {
-    '333'   : "Rubik's Cube",
+    '333'   : "3x3 Cube",
     '444'   : "4x4 Cube",
     '555'   : "5x5 Cube",
     '222'   : "2x2 Cube",
-    '333bf' : "Rubik's Cube: Blindfolded",
-    '333oh' : "Rubik's Cube: One-handed",
-    '333fm' : "Rubik's Cube: Fewest moves",
-    '333ft' : "Rubik's Cube: With feet",
+    '333bf' : "3x3 Cube: Blindfolded",
+    '333oh' : "3x3 Cube: One-handed",
+    '333fm' : "3x3 Cube: Fewest moves",
+    '333ft' : "3x3 Cube: With feet",
     'minx'  : "Megaminx",
     'pyram' : "Pyraminx",
     'sq1'   : "Square-1",
@@ -28,13 +28,13 @@ EVENTS_NAME = {
     '777'   : "7x7 Cube",
     '444bf' : "4x4 Cube: Blindfolded",
     '555bf' : "5x5 Cube: Blindfolded",
-    '333mbf': "Rubik's Cube: Multiple Blindfolded"
+    '333mbf': "3x3 Cube: Multiple Blindfolded"
 }
 
 def format_record(record, event):
     """ Format record value to formatted string suitable for the event. """
     if event == '333fm':
-        return str(record)
+        return str(record)[0:2] + '.' + str(record)[2:]
     elif event == '333mbf':
         # Skip old multiple-bf format
         if 1000000000 < record:
