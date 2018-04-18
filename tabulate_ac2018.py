@@ -62,7 +62,6 @@ def download_compdata_ac2018():
             data['entries'] = entries
             competitors.append(data)
 
-    print competitors
     return competitors
 
 
@@ -79,9 +78,16 @@ if __name__ == '__main__':
         f.write('ID,333,333female,222,444,555,666,777,333bf,333fm,333oh,333ft,clock,minx,pyram,skewb,sq1,444bf,555bf,333mbf,name (competitor w/o WCAID)\n')
         for c in competitors:
             f.write(c['wca_id'] + ',')
+            is_333 = True
             for e in c['entries']:
                 if e:
                     f.write('X,')
                 else:
                     f.write(',')
+                if is_333:
+                    if e and (c['gender'] == 'f'):
+                        f.write('X,')
+                    else:
+                        f.write(',')
+                    is_333 = False
             f.write(c['name'].encode('utf-8') + '\n')
