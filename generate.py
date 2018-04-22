@@ -193,8 +193,9 @@ def read_wcaresults(compdata, countries, latest_export):
                                                         'haswcaid': True}
 
                             # For 333 female
-                            if event_id == '333' and compdata['entries'][person_id]['333female']:
-                                raw['333female'][person_id] = copy.copy(raw[event_id][person_id])
+                            if '333female' in compdata['entries'][person_id]:
+                                if event_id == '333' and compdata['entries'][person_id]['333female']:
+                                    raw['333female'][person_id] = copy.copy(raw[event_id][person_id])
 
     # Update new competitors
     for event in compdata['events']:
