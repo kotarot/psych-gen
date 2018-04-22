@@ -1,0 +1,3 @@
+[competition]
+name = Asian Championship 2018 in Taiwan
+description = Info: <a href="https://www.worldcubeassociation.org/competitions/AsianChampionship2018" target="_blank">WCA</a>, <a href="https://cubing-tw.net/event/2018AsianChampionship/" target="_blank">Official website</a>
