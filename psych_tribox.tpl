@@ -17,6 +17,7 @@
     <nav class="navbar navbar-inverse" style="min-height: 0;">
       <div class="container-fluid">
         <div class="navbar-header">
+          <a class="navbar-tribox" href="http://tribox.com/open/"><b>tribox Open</b></a>
           <a class="navbar-tribox" href="http://tribox.com/">ホーム</a>
           <a class="navbar-tribox" href="https://store.tribox.com/">ストア</a>
           <a class="navbar-tribox" href="https://contest.tribox.com/">コンテスト</a>
@@ -31,7 +32,7 @@
     <div class="alert" role="alert" style="border-color: #DDD; color: #333; background-color: #FFF;">
       Psych sheet (サイクシート) とは、大会にエントリしている選手の各種目ごとの公式自己ベスト記録ランキングです。
       このページは、<a href="https://www.worldcubeassociation.org/results/misc/export.html" target="_blank">WCA Results terms of use</a>
-      に則して作成されています。<br>
+      にもとづいて作成されています。<br>
       ※左端の数字はランキングを表しています（エントリナンバーではありません）。
     </div>
 
