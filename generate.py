@@ -6,6 +6,7 @@ import cubing
 import argparse
 from bs4 import BeautifulSoup
 import ConfigParser
+import copy
 import csv
 import datetime
 import glob
@@ -190,6 +191,10 @@ def read_wcaresults(compdata, countries, latest_export):
                                                         'value': record,
                                                         'formatted': cubing.format_record(record, event_id),
                                                         'haswcaid': True}
+
+                            # For 333 female
+                            if event_id == '333' and compdata['entries'][person_id]['333female']:
+                                raw['333female'][person_id] = copy.copy(raw[event_id][person_id])
 
     # Update new competitors
     for event in compdata['events']:
