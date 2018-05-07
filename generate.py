@@ -145,7 +145,7 @@ def find_latest_export():
 
 def read_wcacountries(latest_export):
     """ Reads the WCA countries. """
-    countries = {'Unknown': {'name': 'Unknown', 'iso2': '_unknown'}}
+    countries = {'Unknown': {'name': '', 'iso2': '_unknown'}}
 
     # Read countries data
     with zipfile.ZipFile(SCRIPT_DIR + WCA_EXPORT_DIR + '/' + latest_export) as zf:
@@ -186,7 +186,7 @@ def read_wcaresults(compdata, countries, latest_export):
                         if (0 < record) and \
                            ((person_id not in raw[event_id]) or (record < raw[event_id][person_id]['value'])):
                             raw[event_id][person_id] = {'id': person_id, 'name': person_name,
-                                                        'country': person_country,
+                                                        'country': countries[person_country]['name'],
                                                         'countryiso2': countries[person_country]['iso2'],
                                                         'value': record,
                                                         'formatted': cubing.format_record(record, event_id),
@@ -204,7 +204,7 @@ def read_wcaresults(compdata, countries, latest_export):
                 competitor_country = compdata['competitorscountry'][competitor_id]
                 raw[event][competitor_id] = {'id': competitor_id,
                                              'name': compdata['competitorsname'][competitor_id],
-                                             'country': competitor_country,
+                                             'country': countries[competitor_country]['name'],
                                              'countryiso2': countries[competitor_country]['iso2'],
                                              'value': VALUE_DNF, 'formatted': '&ndash;',
                                              'haswcaid': competitor_id[0] != 'N'}
