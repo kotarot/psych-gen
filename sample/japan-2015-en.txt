@@ -1,3 +1,0 @@
-[competition]
-name = Japan Open 2015
-description = Competition Info: <a href="https://www.worldcubeassociation.org/results/c.php?i=JapanOpen2015" target="_blank">WCA</a>, <a href="http://jrca.cc/modules/eguide/event.php?eid=94" target="_blank">JRCA</a>
