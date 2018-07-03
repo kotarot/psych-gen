@@ -15,6 +15,7 @@ WCA_*.zip
 # Output HTML
 *.html
 
-# Excluding samples
-sample/tribox*
-sample/ac-2018*
+# Ignore samples
+sample/*.csv
+sample/*.txt
+sample/*.html
