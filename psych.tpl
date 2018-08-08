@@ -25,7 +25,7 @@
     {% for event in compdata.events -%}
       <div id="table-container-{{ event }}" class="table-container" style="display:none;">
         <h2>{{ attrs.events_name.get(event) }}</h2>
-        <table id="table-{{ event }}" class="table table-striped">
+        <table id="table-{{ event }}" class="table table-striped" style="width: 100%;">
           <thead><tr>
             <th>#</th>
             <th class="col-desktop">Name</th>
