@@ -1,0 +1,3 @@
+[competition]
+name = tribox Open Spring 2018
+description = tribox Inc.

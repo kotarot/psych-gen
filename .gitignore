@@ -11,11 +11,3 @@ Thumbs.db
 
 # WCA data
 WCA_*.zip
-
-# Output HTML
-*.html
-
-# Ignore samples
-sample/*.csv
-sample/*.txt
-sample/*.html

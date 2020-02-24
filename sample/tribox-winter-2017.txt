@@ -1,0 +1,3 @@
+[competition]
+name = tribox Open Winter 2017
+description = tribox Inc.
